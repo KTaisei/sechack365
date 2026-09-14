@@ -1,0 +1,6 @@
+import { DocumentMap } from '../document-map';
+export const dynamic='force-static';
+const areas=[
+ {href:'/topics/problem/',no:'課題',title:'解決したい課題',style:{left:'1.9%',top:'8.5%',width:'46.5%',height:'5.3%'}},{href:'/topics/goal/',no:'目標',title:'プロジェクトのゴール',style:{left:'48.8%',top:'8.5%',width:'49.4%',height:'5.3%'}},{href:'/topics/learning-map/',no:'01',title:'ナレッジグラフを作る技術',style:{left:'1.9%',top:'14.3%',width:'96.3%',height:'21.5%'}},{href:'/topics/system/',no:'02',title:'システム全体のつながり',style:{left:'1.9%',top:'36.2%',width:'96.3%',height:'17.2%'}},{href:'/topics/diagnosis/',no:'03',title:'質問数を少なくする技術',style:{left:'1.9%',top:'53.8%',width:'55.6%',height:'21.5%'}},{href:'/topics/experiment/',no:'03-2',title:'予備実験',style:{left:'58.1%',top:'53.8%',width:'40.1%',height:'21.5%'}},{href:'/topics/ipad-app/',no:'04',title:'iPadアプリの実装',style:{left:'1.9%',top:'75.8%',width:'47.7%',height:'20.4%'}},{href:'/topics/next-step/',no:'05',title:'今後の展開',style:{left:'50%',top:'75.8%',width:'48.2%',height:'20.4%'}},
+];
+export default function Page(){return <DocumentMap kind="POSTER / A1" title="プロジェクトポスター" description="実際のA1ポスター全体を表示しています。紙面上のセクションを直接選択できます。" image="/exhibits/research-poster.png" pdf="/exhibits/research-poster.pdf" areas={areas}/>}
