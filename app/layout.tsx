@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { siteHref } from '../lib/base-path';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: '「学ぶ」を支援するシステムの開発｜SecHack365 学習駆動コース 川上泰正',
   description: 'AIが理解状態に合わせて学習ルートとスケジュールを設計する、パーソナライズ学習システムの研究開発プロジェクト。',
+  icons: { icon: siteHref('/favicon.svg') },
 };
 
 export default function RootLayout({
