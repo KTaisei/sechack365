@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../components/base-link';
 import { siteHref } from '../lib/base-path';
 import { Site } from './site';
 /* oxlint-disable next/no-img-element -- supplied exhibition documents are shown without visual changes */

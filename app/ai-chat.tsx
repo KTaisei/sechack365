@@ -1,13 +1,11 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { siteHref } from '../lib/base-path';
-
 const apiUrl = process.env.NEXT_PUBLIC_SAKURA_AI_PROXY_URL ?? '';
 type Source = { title: string; url: string };
 const examples = ['この研究の目的は？', 'GIADとは？', '実験結果を教えて'];
 
-export function AiChat() {
+export function AiChat({ basePath = '' }: { basePath?: string }) {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [error, setError] = useState('');
@@ -55,7 +53,7 @@ export function AiChat() {
     <div className="chat-result" aria-live="polite" aria-busy={loading}>
       {loading && <p>展示資料をもとに回答を作成しています。</p>}
       {answer && <p><strong>AI：</strong>{answer}</p>}
-      {sources.length > 0 && <div className="chat-sources"><strong>根拠となる展示ページ</strong><ul>{sources.map(source => <li key={source.url}><a href={siteHref(source.url)}>{source.title}</a></li>)}</ul></div>}
+      {sources.length > 0 && <div className="chat-sources"><strong>根拠となる展示ページ</strong><ul>{sources.map(source => <li key={source.url}><a href={`${basePath}${source.url}`}>{source.title}</a></li>)}</ul></div>}
       {error && <p className="chat-error">{error}</p>}
     </div>
     <small>AIの回答には誤りが含まれる場合があります。重要な内容は展示資料で確認してください。</small>

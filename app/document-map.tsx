@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../components/base-link';
 import type { CSSProperties } from 'react';
 import { siteHref } from '../lib/base-path';
 import { Site } from './site';

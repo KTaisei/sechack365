@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { siteHref } from '../lib/base-path';
 
-export function FloatingAiButton() {
+export function FloatingAiButton({ aiPath }: { aiPath: string }) {
   const [leaving, setLeaving] = useState(false);
-  const aiPath = siteHref('/ai/');
 
   function openAi() {
     if (leaving) return;
