@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../../../components/base-link';
 import { Site } from '../../site';
 export const dynamic='force-static';
 export default function Page(){return <Site><main><header className="topic-hero"><div className="container"><Link className="back-link" href="/flyer/">← チラシへ戻る</Link><p className="eyebrow" style={{color:'#0017c1'}}>FLYER / SECTION 02</p><h1>GIADの技術とモデル内部</h1><p className="lead">GIADは、各知識の理解確率を更新し、知識グラフへ証拠を伝え、全体の不確かさを最も減らす次問を選ぶ、説明可能な適応型診断モデルです。</p></div></header><div className="container section topic-layout"><aside className="topic-nav"><strong>このページの内容</strong><a href="#overview">全体像</a><a href="#response">回答モデル</a><a href="#bayes">ベイズ更新</a><a href="#graph">グラフ伝播</a><a href="#selection">次問選択</a><a href="#stop">停止条件</a><a href="#llm">生成AIとの境界</a></aside><article className="topic-body">

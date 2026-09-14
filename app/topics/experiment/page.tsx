@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from '../../../components/base-link';
 import { Site } from '../../site';
 export const dynamic='force-static';
 const results=[
