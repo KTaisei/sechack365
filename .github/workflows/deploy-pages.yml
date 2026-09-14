@@ -29,6 +29,10 @@ jobs:
           PAGES_BASE_PATH: /${{ github.event.repository.name }}
           NEXT_PUBLIC_SAKURA_AI_PROXY_URL: ${{ vars.NEXT_PUBLIC_SAKURA_AI_PROXY_URL }}
         run: npm run build
+      - name: Normalize GitHub Pages asset paths
+        env:
+          PAGES_BASE_PATH: /${{ github.event.repository.name }}
+        run: node scripts/fix-pages-output.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
