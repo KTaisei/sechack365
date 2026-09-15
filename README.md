@@ -25,6 +25,8 @@ npm run dev
 
 APIトークンを公開しないため、`workers/sakura-ai` のCloudflare WorkerがさくらのAI Engineを中継します。
 
+WorkerはCloudflare Durable Objectで、接続元IPごとに直近1分5回・日本時間の1日50回、サイト全体で日本時間の暦月2,700回までに制限します。上限に達したリクエストにはHTTP 429と`Retry-After`を返します。ログインのない公開サイトなので、同じIPを共有する利用者は枠も共有します。AIページの直近3往復は同じブラウザタブの間だけ保持し、新しい会話またはタブを閉じると消えます。
+
 1. `workers/sakura-ai/wrangler.jsonc` の `ALLOWED_ORIGIN` を公開サイトのOriginに変更します（末尾の `/` は付けません）。
 2. Cloudflareへログインして、さくらAIのアカウントトークンをSecretとして登録・デプロイします。
 

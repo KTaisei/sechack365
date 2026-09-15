@@ -2,7 +2,11 @@
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "sechack-sakura-ai",
   "main": "src/index.ts",
-  "compatibility_date": "2026-09-14",
+  "compatibility_date": "2026-05-22",
+  "durable_objects": {
+    "bindings": [{ "name": "USAGE_LIMITS", "class_name": "UsageLimits" }]
+  },
+  "migrations": [{ "tag": "v1-usage-limits", "new_sqlite_classes": ["UsageLimits"] }],
   "vars": {
     "ALLOWED_ORIGIN": "https://ktaisei.github.io",
     "SAKURA_AI_MODEL": "gpt-oss-120b"

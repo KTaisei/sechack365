@@ -3,9 +3,9 @@ import { AiChat } from '../ai-chat';
 import { Site } from '../site';
 
 export const dynamic = 'force-static';
-export const metadata: Metadata = { title: 'AIに質問する' };
+export const metadata: Metadata = { title: '展示AIガイド' };
 
 export default function AiPage() {
   const basePath = process.env.PAGES_BASE_PATH ?? '';
-  return <Site><main className="ai-page"><section className="ai-page-hero"><div className="container"><p className="eyebrow">AI GUIDE</p><h1>研究についてAIに質問する</h1><p>展示資料を根拠に、研究の目的、仕組み、実験結果や用語を案内します。</p></div></section><section className="ai-page-content"><div className="container"><AiChat basePath={basePath}/></div></section></main></Site>;
+  return <Site><main className="ai-page"><section className="ai-page-content"><div className="container"><AiChat basePath={basePath}/></div></section></main></Site>;
 }

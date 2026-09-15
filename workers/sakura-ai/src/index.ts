@@ -1,10 +1,16 @@
 import { retrieveKnowledge } from './knowledge-base';
+import { UsageLimits, type LimitResult } from './usage-limits';
+
+export { UsageLimits } from './usage-limits';
 
 interface Env {
   SAKURA_AI_TOKEN: string;
   ALLOWED_ORIGIN: string;
   SAKURA_AI_MODEL?: string;
+  USAGE_LIMITS: DurableObjectNamespace<UsageLimits>;
 }
+
+type Turn = { role: 'user' | 'assistant'; content: string };
 
 const SYSTEM_PROMPT = `あなたはSecHack365の研究展示「学ぶを支援するシステムの開発」の案内役です。
 以下の規則を必ず守ってください。
@@ -26,11 +32,31 @@ function corsHeaders(origin: string) {
   };
 }
 
-function json(body: unknown, status: number, origin: string) {
+function json(body: unknown, status: number, origin: string, retryAfter?: number) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8', ...corsHeaders(origin) },
+    headers: { 'Content-Type': 'application/json; charset=utf-8', ...corsHeaders(origin), ...(retryAfter ? { 'Retry-After': String(retryAfter) } : {}) },
   });
+}
+
+function validHistory(value: unknown): Turn[] {
+  if (!Array.isArray(value) || value.length > 6) return [];
+  if (!value.every((turn, index) => turn && typeof turn === 'object' &&
+    turn.role === (index % 2 === 0 ? 'user' : 'assistant') &&
+    typeof turn.content === 'string' && turn.content.length > 0 && turn.content.length <= 800)) return [];
+  return value as Turn[];
+}
+
+async function visitorKey(ip: string, secret: string): Promise<string> {
+  const bytes = new TextEncoder().encode(`${secret}:${ip}`);
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function limitMessage(result: Extract<LimitResult, { allowed: false }>) {
+  if (result.reason === 'month') return '今月のAI利用枠（全体で2,700回）に達しました。来月またお試しください。';
+  if (result.reason === 'day') return '本日の利用上限（50回）に達しました。明日またお試しください。';
+  return '1分間の利用上限（5回）に達しました。少し待ってからお試しください。';
 }
 
 export default {
@@ -44,15 +70,31 @@ export default {
     if (request.method !== 'POST') return json({ error: 'POSTリクエストのみ利用できます。' }, 405, allowedOrigin);
 
     let question = '';
+    let history: Turn[] = [];
     try {
-      const body = (await request.json()) as { question?: unknown };
+      const body = (await request.json()) as { question?: unknown; history?: unknown };
       question = typeof body.question === 'string' ? body.question.trim() : '';
+      history = validHistory(body.history);
     } catch {
       return json({ error: 'リクエスト形式が正しくありません。' }, 400, allowedOrigin);
     }
     if (!question || question.length > 800) return json({ error: '質問は1〜800文字で入力してください。' }, 400, allowedOrigin);
 
-    const retrieved = retrieveKnowledge(question);
+    // Cloudflare supplies this header; an absent IP must fail closed, not share a fallback quota.
+    const ip = request.headers.get('CF-Connecting-IP');
+    if (!ip || !env.SAKURA_AI_TOKEN || !env.USAGE_LIMITS) return json({ error: 'AIの利用設定を確認できません。' }, 503, allowedOrigin);
+    let limit: LimitResult;
+    try {
+      const visitor = await visitorKey(ip, env.SAKURA_AI_TOKEN);
+      limit = await env.USAGE_LIMITS.getByName('site-monthly-budget').reserve(visitor, Date.now());
+    } catch (error) {
+      console.error('Usage limit check failed', error);
+      return json({ error: '利用回数を確認できません。しばらくしてからお試しください。' }, 503, allowedOrigin);
+    }
+    if (!limit.allowed) return json({ error: limitMessage(limit), reason: limit.reason }, 429, allowedOrigin, limit.retryAfter);
+
+    const previousQuestion = [...history].reverse().find(turn => turn.role === 'user')?.content ?? '';
+    const retrieved = retrieveKnowledge(`${previousQuestion} ${question}`.trim());
     const context = retrieved.map((chunk, index) =>
       `[資料${index + 1}: ${chunk.title}]\n${chunk.content}`
     ).join('\n\n');
@@ -68,6 +110,7 @@ export default {
           model: env.SAKURA_AI_MODEL || 'gpt-oss-120b',
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
+            ...history,
             { role: 'user', content: `質問:\n${question}\n\n根拠資料:\n${context}` },
           ],
           temperature: 0.1,
