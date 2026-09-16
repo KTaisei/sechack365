@@ -4,6 +4,7 @@ const base=process.env.PAGES_BASE_PATH ?? '';
 const resources=[
  ['A1 PDF','プロジェクトポスター','課題、全体構成、予備実験、iPadアプリ、今後の展開',`${base}/exhibits/research-poster.pdf`,'PDFを閲覧'],
  ['A4 PDF','技術詳細チラシ','適応型診断の内部処理、推定モデル、予備実験の詳細',`${base}/exhibits/research-flyer.pdf`,'PDFを閲覧'],
+ ['A4 PDF','第一回展示のチラシ','当時の3つのAI技術、開発状況、ロードマップ、デモ',`${base}/exhibits/first-flyer.pdf`,'PDFを閲覧'],
  ['先行研究','個別最適な学び・協働的な学び','指導の個別化と学習の個性化、ICTを活用した学習状況の把握について示した背景資料','https://www.mext.go.jp/a_menu/shotou/new-cs/senseiouen/mext_01491.html','文部科学省'],
  ['JSON','ナレッジグラフサンプル','微分・三角関数・暗号通信の3種類を、レイヤーと依存関係から閲覧',`${base}/knowledge-graphs/`,'ブラウザで閲覧'],
  ['CODE','GitHubリポジトリ','現時点ではKnowledge Graphを生成するシステムのソースのみ公開しています。','https://github.com/KTaisei/KnowledgeGraph','公開中'],

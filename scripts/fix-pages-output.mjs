@@ -14,7 +14,9 @@ if (basePath) {
   await rmdir(nestedDirectory);
 
   const routes = [
-    'ai', 'flyer', 'knowledge-graphs', 'poster', 'progress', 'resources', 'technology',
+    'ai', 'first-flyer', 'flyer', 'knowledge-graphs', 'poster', 'progress', 'resources', 'technology',
+    'topics/first-map', 'topics/first-order', 'topics/first-diagnosis',
+    'topics/first-status', 'topics/first-roadmap', 'topics/first-demo',
     'topics/diagnosis', 'topics/experiment', 'topics/giad-model', 'topics/goal',
     'topics/ipad-app', 'topics/learning-map', 'topics/next-step', 'topics/problem',
     'topics/schedule', 'topics/system',
